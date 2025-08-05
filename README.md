@@ -1,6 +1,6 @@
 # Adafruit QMC5883P Library [![Build Status](https://github.com/adafruit/Adafruit_QMC5883P/workflows/Arduino%20Library%20CI/badge.svg)](https://github.com/adafruit/Adafruit_QMC5883P/actions)
 
-<a href="https://www.adafruit.com/product/6388"><img src="assets/board.jpg?raw=true" width="500px"><br/></a>
+<a href="https://www.adafruit.com/product/6388"><img src="https://cdn-shop.adafruit.com/970x728/6388-00.jpg" width="500px"><br/></a>
 
 This is a library for the QMC5883P 3-axis magnetometer
 
