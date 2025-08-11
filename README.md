@@ -1,4 +1,4 @@
-# Adafruit QMC5883P Library [![Build Status](https://github.com/adafruit/Adafruit_QMC5883P/workflows/Arduino%20Library%20CI/badge.svg)](https://github.com/adafruit/Adafruit_QMC5883P/actions)
+# Adafruit QMC5883P Library [![Build Status](https://github.com/adafruit/Adafruit_QMC5883P/workflows/Arduino%20Library%20CI/badge.svg)](https://github.com/adafruit/Adafruit_QMC5883P/actions)[![Documentation](https://github.com/adafruit/ci-arduino/blob/master/assets/doxygen_badge.svg)](http://adafruit.github.io/Adafruit_QMC5883P/html/index.html)
 
 <a href="https://www.adafruit.com/product/6388"><img src="assets/board.jpg?raw=true" width="500px"><br/></a>
 
