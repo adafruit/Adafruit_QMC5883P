@@ -31,6 +31,7 @@
  */
 Adafruit_QMC5883P::Adafruit_QMC5883P(void) {
   i2c_dev = NULL;
+  _lsb_per_gauss = 1000.0; // Default: ±30G range
 }
 
 /*!
@@ -68,6 +69,9 @@ bool Adafruit_QMC5883P::begin(uint8_t i2c_addr, TwoWire* wire) {
   if (chip_id != 0x80) {
     return false;
   }
+
+  // Sync cached sensitivity with current hardware range
+  _updateSensitivity(getRange());
 
   return true;
 }
@@ -118,31 +122,10 @@ bool Adafruit_QMC5883P::getGaussField(float* x, float* y, float* z) {
     return false;
   }
 
-  // Get current range to determine conversion factor
-  qmc5883p_range_t range = getRange();
-  float lsb_per_gauss;
-
-  switch (range) {
-    case QMC5883P_RANGE_30G:
-      lsb_per_gauss = 1000.0;
-      break;
-    case QMC5883P_RANGE_12G:
-      lsb_per_gauss = 2500.0;
-      break;
-    case QMC5883P_RANGE_8G:
-      lsb_per_gauss = 3750.0;
-      break;
-    case QMC5883P_RANGE_2G:
-      lsb_per_gauss = 15000.0;
-      break;
-    default:
-      return false;
-  }
-
-  // Convert to Gauss
-  *x = (float)raw_x / lsb_per_gauss;
-  *y = (float)raw_y / lsb_per_gauss;
-  *z = (float)raw_z / lsb_per_gauss;
+  // Convert to Gauss using cached sensitivity
+  *x = (float)raw_x / _lsb_per_gauss;
+  *y = (float)raw_y / _lsb_per_gauss;
+  *z = (float)raw_z / _lsb_per_gauss;
 
   return true;
 }
@@ -291,7 +274,13 @@ bool Adafruit_QMC5883P::softReset() {
   Adafruit_BusIO_Register chip_id_reg =
       Adafruit_BusIO_Register(i2c_dev, QMC5883P_REG_CHIPID);
   uint8_t chip_id = chip_id_reg.read();
-  return (chip_id == 0x80);
+  if (chip_id != 0x80) {
+    return false;
+  }
+
+  // Reset restores default range (±30G), sync cached sensitivity
+  _updateSensitivity(QMC5883P_RANGE_30G);
+  return true;
 }
 
 /*!
@@ -316,6 +305,31 @@ bool Adafruit_QMC5883P::selfTest() {
 }
 
 /*!
+ *  @brief  Updates the cached LSB-per-Gauss sensitivity for a given range
+ *  @param  range
+ *          The magnetic field range to derive sensitivity from
+ */
+void Adafruit_QMC5883P::_updateSensitivity(qmc5883p_range_t range) {
+  switch (range) {
+    case QMC5883P_RANGE_30G:
+      _lsb_per_gauss = 1000.0;
+      break;
+    case QMC5883P_RANGE_12G:
+      _lsb_per_gauss = 2500.0;
+      break;
+    case QMC5883P_RANGE_8G:
+      _lsb_per_gauss = 3750.0;
+      break;
+    case QMC5883P_RANGE_2G:
+      _lsb_per_gauss = 15000.0;
+      break;
+    default:
+      _lsb_per_gauss = 1000.0;
+      break;
+  }
+}
+
+/*!
  *  @brief  Sets the magnetic field range
  *  @param  range
  *          The magnetic field range to set
@@ -326,6 +340,7 @@ void Adafruit_QMC5883P::setRange(qmc5883p_range_t range) {
   Adafruit_BusIO_RegisterBits range_bits =
       Adafruit_BusIO_RegisterBits(&ctrl2_reg, 2, 2);
   range_bits.write(range);
+  _updateSensitivity(range);
 }
 
 /*!
