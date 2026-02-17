@@ -116,13 +116,13 @@ typedef enum {
  * @brief Class for hardware interfacing with the QMC5883P 3-axis magnetometer
  */
 class Adafruit_QMC5883P {
- public:
+public:
   Adafruit_QMC5883P(void);
   ~Adafruit_QMC5883P(void);
 
-  bool begin(uint8_t i2c_addr = QMC5883P_DEFAULT_ADDR, TwoWire* wire = &Wire);
-  bool getRawMagnetic(int16_t* x, int16_t* y, int16_t* z);
-  bool getGaussField(float* x, float* y, float* z);
+  bool begin(uint8_t i2c_addr = QMC5883P_DEFAULT_ADDR, TwoWire *wire = &Wire);
+  bool getRawMagnetic(int16_t *x, int16_t *y, int16_t *z);
+  bool getGaussField(float *x, float *y, float *z);
   bool isDataReady();
   bool isOverflow();
   void setMode(qmc5883p_mode_t mode);
@@ -140,8 +140,8 @@ class Adafruit_QMC5883P {
   void setSetResetMode(qmc5883p_setreset_t mode);
   qmc5883p_setreset_t getSetResetMode();
 
- private:
-  Adafruit_I2CDevice* i2c_dev; ///< Pointer to I2C bus interface
+private:
+  Adafruit_I2CDevice *i2c_dev; ///< Pointer to I2C bus interface
 };
 
 #endif
