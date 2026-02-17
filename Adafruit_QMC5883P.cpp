@@ -29,9 +29,7 @@
 /*!
  *  @brief  Instantiates a new QMC5883P class
  */
-Adafruit_QMC5883P::Adafruit_QMC5883P(void) {
-  i2c_dev = NULL;
-}
+Adafruit_QMC5883P::Adafruit_QMC5883P(void) { i2c_dev = NULL; }
 
 /*!
  *  @brief  Cleans up the QMC5883P
@@ -50,7 +48,7 @@ Adafruit_QMC5883P::~Adafruit_QMC5883P(void) {
  *          The Wire object to be used for I2C connections.
  *  @return True if initialization was successful, otherwise false.
  */
-bool Adafruit_QMC5883P::begin(uint8_t i2c_addr, TwoWire* wire) {
+bool Adafruit_QMC5883P::begin(uint8_t i2c_addr, TwoWire *wire) {
   if (i2c_dev) {
     delete i2c_dev;
   }
@@ -82,7 +80,7 @@ bool Adafruit_QMC5883P::begin(uint8_t i2c_addr, TwoWire* wire) {
  *          Pointer to store Z-axis raw data (2's complement)
  *  @return True if read was successful, otherwise false.
  */
-bool Adafruit_QMC5883P::getRawMagnetic(int16_t* x, int16_t* y, int16_t* z) {
+bool Adafruit_QMC5883P::getRawMagnetic(int16_t *x, int16_t *y, int16_t *z) {
   uint8_t buffer[6];
 
   // Read all 6 bytes (X,Y,Z LSB+MSB) starting from X LSB register
@@ -110,7 +108,7 @@ bool Adafruit_QMC5883P::getRawMagnetic(int16_t* x, int16_t* y, int16_t* z) {
  *          Pointer to store Z-axis field in Gauss
  *  @return True if read was successful, otherwise false.
  */
-bool Adafruit_QMC5883P::getGaussField(float* x, float* y, float* z) {
+bool Adafruit_QMC5883P::getGaussField(float *x, float *y, float *z) {
   int16_t raw_x, raw_y, raw_z;
 
   // Get raw magnetic data
@@ -123,20 +121,20 @@ bool Adafruit_QMC5883P::getGaussField(float* x, float* y, float* z) {
   float lsb_per_gauss;
 
   switch (range) {
-    case QMC5883P_RANGE_30G:
-      lsb_per_gauss = 1000.0;
-      break;
-    case QMC5883P_RANGE_12G:
-      lsb_per_gauss = 2500.0;
-      break;
-    case QMC5883P_RANGE_8G:
-      lsb_per_gauss = 3750.0;
-      break;
-    case QMC5883P_RANGE_2G:
-      lsb_per_gauss = 15000.0;
-      break;
-    default:
-      return false;
+  case QMC5883P_RANGE_30G:
+    lsb_per_gauss = 1000.0;
+    break;
+  case QMC5883P_RANGE_12G:
+    lsb_per_gauss = 2500.0;
+    break;
+  case QMC5883P_RANGE_8G:
+    lsb_per_gauss = 3750.0;
+    break;
+  case QMC5883P_RANGE_2G:
+    lsb_per_gauss = 15000.0;
+    break;
+  default:
+    return false;
   }
 
   // Convert to Gauss
