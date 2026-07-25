@@ -142,6 +142,8 @@ public:
 
 private:
   Adafruit_I2CDevice *i2c_dev; ///< Pointer to I2C bus interface
+  float _lsb_per_gauss;        ///< Cached sensitivity for Gauss conversion
+  void _updateSensitivity(qmc5883p_range_t range);
 };
 
 #endif
